@@ -18,6 +18,7 @@
 		A10000010000000000000009 /* Preview Content/Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000110000000000000010 /* Preview Content/Preview Assets.xcassets */; };
 		A10000010000000000000012 /* MasterCardAnimationShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000110000000000000012 /* MasterCardAnimationShowcase.swift */; };
 		A10000010000000000000013 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000110000000000000013 /* HapticManager.swift */; };
+		A10000010000000000000014 /* IntelligenceGlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000110000000000000014 /* IntelligenceGlow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		A10000110000000000000011 /* FoldingFridge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoldingFridge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000110000000000000012 /* MasterCardAnimationShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterCardAnimationShowcase.swift; sourceTree = "<group>"; };
 		A10000110000000000000013 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		A10000110000000000000014 /* IntelligenceGlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelligenceGlow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				A10000110000000000000007 /* ContentView.swift */,
 				A10000110000000000000012 /* MasterCardAnimationShowcase.swift */,
 				A10000110000000000000013 /* HapticManager.swift */,
+				A10000110000000000000014 /* IntelligenceGlow.swift */,
 				A10000110000000000000008 /* Assets.xcassets */,
 				A10000110000000000000009 /* Info.plist */,
 				A10000110000000000000010 /* Preview Content/Preview Assets.xcassets */,
@@ -157,6 +160,7 @@
 				A10000010000000000000004 /* CameraService.swift in Sources */,
 				A10000010000000000000007 /* ContentView.swift in Sources */,
 				A10000010000000000000013 /* HapticManager.swift in Sources */,
+				A10000010000000000000014 /* IntelligenceGlow.swift in Sources */,
 				A10000010000000000000012 /* MasterCardAnimationShowcase.swift in Sources */,
 				A10000010000000000000001 /* FoldingFridgeApp.swift in Sources */,
 				A10000010000000000000002 /* Models.swift in Sources */,

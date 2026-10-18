@@ -29,6 +29,8 @@ final class AppViewModel: ObservableObject {
     private let service: RecipeService
     private var statusTask: Task<Void, Never>?
     private var lastPresentedRecipeSource: PresentedRecipeSheet.Source?
+    private let presentationImageAssetName = "DemoCup"
+    private let presentationDelayNanoseconds: UInt64 = 5_000_000_000
 
     init(service: RecipeService) {
         profileAvatarData = UserDefaults.standard.data(forKey: Self.profileAvatarDefaultsKey)
@@ -228,48 +230,93 @@ final class AppViewModel: ObservableObject {
     }
 
     private func analyze(image: UIImage) async {
-        guard let imageData = image.jpegData(compressionQuality: 0.92) else {
-            statusTask?.cancel()
-            errorMessage = "The captured photo could not be prepared for analysis."
-            return
-        }
+        try? await Task.sleep(nanoseconds: presentationDelayNanoseconds)
+        statusTask?.cancel()
 
-        do {
-            let payload = try await service.analyzeFridgeImage(imageData)
-            statusTask?.cancel()
-            withAnimation(.easeInOut(duration: 0.45)) {
-                analysisPayload = payload
-                HapticManager.success()
-                presentedRecipeSheet = PresentedRecipeSheet(
-                    payload: payload,
-                    imageData: imageData,
-                    source: .generated
-                )
-                lastPresentedRecipeSource = .generated
-                capturedImage = nil
-                errorMessage = nil
-            }
-        } catch {
-            statusTask?.cancel()
-            withAnimation(.easeInOut(duration: 0.35)) {
-                capturedImage = nil
-                analyzedImage = nil
-                errorMessage = error.localizedDescription.isEmpty ? "Analysis failed." : error.localizedDescription
-            }
+        let payload = makePresentationPayload()
+        let demoImageData = makePresentationImageData() ?? image.jpegData(compressionQuality: 0.92)
+
+        withAnimation(.easeInOut(duration: 0.25)) {
+            analysisPayload = payload
+            analyzedImage = makePresentationUIImage() ?? image
+            HapticManager.success()
+            presentedRecipeSheet = PresentedRecipeSheet(
+                payload: payload,
+                imageData: demoImageData,
+                source: .generated
+            )
+            lastPresentedRecipeSource = .generated
+            capturedImage = nil
+            errorMessage = nil
         }
     }
 
+    private func makePresentationUIImage() -> UIImage? {
+        UIImage(named: presentationImageAssetName)
+    }
+
+    private func makePresentationImageData() -> Data? {
+        makePresentationUIImage()?.jpegData(compressionQuality: 0.94)
+    }
+
+    private func makePresentationPayload() -> AnalysisPayload {
+        let imageData = makePresentationImageData()
+
+        let recipe = RecipeSuggestion(
+            title: "Blueberry Banana Chocolate Oat Yogurt Cup",
+            subtitle: "A fresh layered yogurt cup with fruit, oats, and chocolate, designed as a quick, balanced, and visually pleasing everyday treat.",
+            generatedImageData: imageData,
+            usedIngredients: [
+                "Banana",
+                "Blueberries",
+                "Oats",
+                "Chocolate",
+                "Milk",
+                "Yogurt"
+            ],
+            pantryAssumptions: [],
+            whyItWorks: "Banana adds softness and natural sweetness, blueberries bring brightness, oats create body, and chocolate gives the final cup a richer finish. Yogurt and milk tie everything together into a smooth layered texture.",
+            whyHealthy: "It combines fruit, dairy, and oats into a light but filling option, giving the user a more balanced alternative to a processed dessert.",
+            whyDelicious: "The flavor structure is simple but complete: creamy yogurt, sweet banana, bright blueberries, soft oats, and small hits of chocolate.",
+            timeMinutes: 5,
+            steps: [
+                "Slice the banana and rinse the blueberries carefully, then set them aside for layering.",
+                "Combine the oats with a small amount of milk and let them sit briefly so they soften and become smoother in texture.",
+                "Spoon a layer of yogurt into the bottom of a clear glass or serving cup.",
+                "Add a layer of softened oats, then place banana slices and blueberries over the top.",
+                "Repeat the layering with more yogurt, oats, banana, and blueberries until the cup looks full and balanced.",
+                "Finish with small chocolate pieces or chocolate shavings on the top layer, then add a few extra blueberries for a clean final look.",
+                "Serve immediately, or chill briefly so the layers settle and the texture becomes slightly firmer."
+            ],
+            finalResultDescription: "The finished dish should look like a neat layered yogurt cup with visible white yogurt, pale oats, fresh banana slices, bright blueberries, and small dark chocolate accents. It should feel refreshing, soft, lightly indulgent, and polished enough to look like a carefully plated cafe-style breakfast."
+        )
+
+        return AnalysisPayload(
+            detectedIngredients: [
+                DetectedIngredient(name: "Banana", confidence: 0.99),
+                DetectedIngredient(name: "Blueberries", confidence: 0.99),
+                DetectedIngredient(name: "Oats", confidence: 0.98),
+                DetectedIngredient(name: "Chocolate", confidence: 0.98),
+                DetectedIngredient(name: "Milk", confidence: 0.97),
+                DetectedIngredient(name: "Yogurt", confidence: 0.99)
+            ],
+            uncertainIngredients: [],
+            recipes: [recipe],
+            modelSummary: "Presentation build: the app currently returns a fixed yogurt cup recipe instantly for demonstration consistency."
+        )
+    }
+
     private func cycleStatusMessages() async {
-        let statuses = [
-            "Reading ingredients",
-            "Finding the strongest dish",
-            "Finishing the recipe notes"
+        let statuses: [(String, UInt64)] = [
+            ("Reading ingredients", 1_500_000_000),
+            ("Finding the strongest dish", 1_500_000_000),
+            ("Finishing the recipe notes", 2_000_000_000)
         ]
 
-        for status in statuses {
+        for (status, duration) in statuses {
             guard !Task.isCancelled else { return }
             analysisStatus = status
-            try? await Task.sleep(nanoseconds: 550_000_000)
+            try? await Task.sleep(nanoseconds: duration)
         }
     }
 

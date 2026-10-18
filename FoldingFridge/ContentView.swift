@@ -590,10 +590,32 @@ private struct UploadTransitionView: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 260)
 
-            ProgressView()
-                .controlSize(.regular)
-                .tint(FFTheme.textPrimary.opacity(0.76))
+            IntelligenceGeneratingCapsule()
         }
+    }
+}
+
+private struct IntelligenceGeneratingCapsule: View {
+    var body: some View {
+        HStack(spacing: 10) {
+            ProgressView()
+                .controlSize(.small)
+                .tint(FFTheme.textPrimary.opacity(0.82))
+
+            Text("Generating")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(FFTheme.textPrimary.opacity(0.86))
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial, in: Capsule(style: .continuous))
+        .intelligenceBackground(in: Capsule(style: .continuous))
+        .overlay {
+            Capsule(style: .continuous)
+                .stroke(Color.white.opacity(0.42), lineWidth: 0.8)
+        }
+        .frame(width: 228, height: 48)
+        .shadow(color: Color.black.opacity(0.05), radius: 16, x: 0, y: 8)
     }
 }
 
