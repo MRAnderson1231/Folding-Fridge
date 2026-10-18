@@ -154,7 +154,7 @@ private struct OnboardingView: View {
                 .zIndex(1)
 
                 collageElement(
-                    imageName: "ornage",
+                    imageName: "orange",
                     width: 245,
                     height: 279,
                     offsetX: 171,
@@ -967,7 +967,7 @@ private struct ProfileView: View {
             )
 
             profileArtwork(
-                name: "ornage",
+                name: "orange",
                 width: 245,
                 height: 279,
                 centerX: 72,
